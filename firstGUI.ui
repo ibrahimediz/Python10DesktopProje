@@ -25,7 +25,7 @@
     </property>
     <layout class="QFormLayout" name="formLayout">
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="txt1"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label">
@@ -35,7 +35,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="Bt1">
        <property name="text">
         <string>PushButton</string>
        </property>
