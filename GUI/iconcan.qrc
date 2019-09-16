@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="\iconset\">
+    <file>iconcan.qrc</file>
+  </qresource>
+</RCC>
