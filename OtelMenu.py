@@ -7,12 +7,11 @@ import os
 
 
 class OtelMenu(QWidget):
-    kayitId = pyqtSignal(int)
-    def __init__(self):
-        super().__init__()
+    def __init__(self,parent):
+        super(OtelMenu,self).__init__(parent)
         self.db = OtelMenuDB()
         self.initUI()
-        
+        self.parent = parent
     
     def initUI(self):
         self.otel = uic.loadUi(os.getcwd()+os.sep+"GUI\Otel.ui")
@@ -20,25 +19,22 @@ class OtelMenu(QWidget):
         self.otel.btKaydet.clicked.connect(self.kaydetme)
         self.otel.otelListe.doubleClicked.connect(self.secim)
         self.otel.btTemizle.clicked.connect(self.doldur)
+        self.otel.btOtelSec.clicked.connect(self.otelSecim)
         self.sozlukDoldur()
         self.ilDoldur()
         self.listeDoldur()
         self.otel.show()
 
-    # @property
-    # def otelSecim(self):
-    #     if self.otel.lblOtelID.text():
-    #         return self.otel.lblOtelID.text()
-
-    # def setPencere(self,nesne):
-    #     self.ana = AnaMenu(self)
-    #     self.ana.tetikleme(nesne)
+    def otelSecim(self):
+        self.parent.otelSecildi(self.otel.lblOtelID.text())
+        self.otel.close()
 
     def secim(self):
         secilen = self.otel.otelListe.currentItem().text()
         ID =  secilen.split('-')[0]
         secilenBilgi =  self.db.OtelListe(ID)[0]
         self.doldur(secilenBilgi)
+
     def doldur(self,secilenBilgi=[]):
         if secilenBilgi:
             self.otel.lblOtelID.setText(str(secilenBilgi[0]))
@@ -58,6 +54,12 @@ class OtelMenu(QWidget):
             self.otel.txtYildiz.setText("")
             self.otel.txtTel.setText("")
             self.otel.txtAdres.setText("")
+
+    def gunsayYaz(self,val=0):
+        self.otel.lblGun.setText(val)
+
+    def tetikleme(self,anamenu=None):
+        anamenu.gunSay.connect(self.gunsayYaz)
 
 
     def comboSecimYap(self,itemData = 0,combo=None):
@@ -124,5 +126,5 @@ class OtelMenu(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = OtelMenu()
+    ex = OtelMenu(app)
     sys.exit(app.exec_())

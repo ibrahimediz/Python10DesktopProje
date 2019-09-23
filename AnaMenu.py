@@ -8,6 +8,7 @@ import os
 
 
 class AnaMenu(QMainWindow):
+    gunSay = pyqtSignal(str)
     def __init__(self):
         super().__init__()
         self.db = AnaMenuDB()
@@ -17,15 +18,20 @@ class AnaMenu(QMainWindow):
         self.otelSecim = ""
         self.win = uic.loadUi(os.getcwd()+os.sep+"\GUI\AnaMenu.ui")
         self.win.otelBilgi.triggered.connect(self.ac)
-        self.win.cmbMusteri.currentIndexChanged.connect(self.secilen)
-        self.win.cmbOda.currentIndexChanged.connect(self.secilen)
+        self.win.txtGun.textChanged.connect(self.gunGonder)
         self.MusteriDoldur()
         self.OdaDoldur()
         self.win.show()
+
+
+    def gunGonder(self):
+        gunsay = self.win.txtGun.text()
+        self.gunSay.emit(gunsay)
     
     def ac(self):
-        self.otel = OtelMenu()
-        self.otelSecim =self.otel.otelSecim
+        self.otel = OtelMenu(self)
+        self.otel.tetikleme(self)
+        
         
 
     def MusteriDoldur(self):
@@ -43,12 +49,13 @@ class AnaMenu(QMainWindow):
         combo = self.sender()
         print(combo.itemData(index))
 
-    @pyqtSlot(int)
     def otelSecildi(self,val=0):
-        self.otelSecim = val
-
-    def tetikleme(self,anaMenu=None):
-        anaMenu.kayitId.connect(self.otelSecildi)
+        self.win.cmbOda.clear()
+        liste = self.db.OdaListe(val)
+        if liste:
+            self.win.cmbOda.addItem("Seçiniz","-1")
+        for ID,NUM in liste:
+            self.win.cmbOda.addItem(str(NUM),str(ID))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
